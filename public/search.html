@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cell</title>
+    <style>
+        :root {
+            --theme-color: #00ffff;
+            --bg-color: #0a0a0a;
+            --bg-color-secondary: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-color-secondary) 100%);
+            color: var(--theme-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        body.light-theme {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo h1 {
+            font-size: 48px;
+            text-shadow: 0 0 20px var(--theme-color), 0 0 40px var(--theme-color);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        body.light-theme .logo h1 {
+            text-shadow: none;
+            animation: none;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px var(--theme-color), 0 0 20px var(--theme-color); }
+            to { text-shadow: 0 0 20px var(--theme-color), 0 0 40px var(--theme-color), 0 0 60px var(--theme-color); }
+        }
+
+        .search-box {
+            background: var(--bg-color-secondary);
+            border: 2px solid var(--theme-color);
+            border-radius: 25px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 20px color-mix(in srgb, var(--theme-color) 30%, transparent);
+            margin-bottom: 30px;
+        }
+
+        body.light-theme .search-box {
+            box-shadow: none;
+        }
+
+        .search-box input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--theme-color);
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            outline: none;
+            min-width: 0;
+        }
+
+        .search-box input::placeholder {
+            color: color-mix(in srgb, var(--theme-color) 50%, transparent);
+        }
+
+        .search-box button {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 12px;
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .search-box button:hover {
+            filter: brightness(0.8);
+            box-shadow: 0 0 15px var(--theme-color);
+        }
+
+        body.light-theme .search-box button:hover {
+            box-shadow: none;
+        }
+
+        /* Mode privé: fond noir, texte/bordure rouge */
+        body.private-mode .search-box button {
+            background: #0a0a0a;
+            color: var(--theme-color);
+            border: 2px solid var(--theme-color);
+        }
+
+        .results {
+            background: var(--bg-color-secondary);
+            border: 2px solid var(--theme-color);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid color-mix(in srgb, var(--theme-color) 19%, transparent);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item a {
+            color: var(--theme-color);
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .result-item a:hover {
+            text-shadow: 0 0 10px var(--theme-color);
+        }
+
+        body.light-theme .result-item a:hover {
+            text-shadow: none;
+        }
+
+        .result-url {
+            color: color-mix(in srgb, var(--theme-color) 50%, transparent);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .result-desc {
+            color: color-mix(in srgb, var(--theme-color) 80%, transparent);
+            line-height: 1.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .powered-by {
+            text-align: center;
+            margin-top: 30px;
+            color: color-mix(in srgb, var(--theme-color) 50%, transparent);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .logo h1 {
+                font-size: clamp(32px, 8vw, 48px);
+            }
+
+            .logo {
+                margin-bottom: 30px;
+            }
+
+            .search-box {
+                padding: 8px 12px;
+            }
+
+            .search-box input {
+                font-size: 16px;
+            }
+
+            .search-box button {
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                font-size: 14px;
+            }
+
+            .results {
+                padding: 15px;
+                min-height: 200px;
+            }
+
+            .result-item a {
+                font-size: 16px;
+            }
+
+            .powered-by {
+                font-size: 12px;
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 8px;
+            }
+
+            .logo h1 {
+                font-size: clamp(24px, 10vw, 36px);
+            }
+
+            .logo {
+                margin-bottom: 20px;
+            }
+
+            .search-box {
+                padding: 6px 10px;
+                border-radius: 20px;
+            }
+
+            .search-box input {
+                font-size: 14px;
+            }
+
+            .search-box button {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                font-size: 12px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>CELL</h1>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Rechercher sur le web..." autofocus>
+            <button onclick="performSearch()">GO</button>
+        </div>
+
+        <div class="results" id="results"></div>
+
+        <div class="powered-by">
+            Powered by Cell AI • Cell Browser
+        </div>
+    </div>
+
+    <script>
+        // Charger la couleur du thème depuis localStorage
+        let currentThemeColor = '#000000';
+        let isLightTheme = true;
+
+        function applyTheme(themeColor, lightTheme) {
+            currentThemeColor = themeColor;
+            isLightTheme = lightTheme;
+
+            // Définir les variables CSS
+            document.documentElement.style.setProperty('--theme-color', themeColor);
+
+            // Détecter le mode privé (thème rouge sur fond sombre)
+            const isPrivateMode = themeColor === '#ff0000' && !lightTheme;
+
+            if (lightTheme) {
+                document.documentElement.style.setProperty('--bg-color', '#ffffff');
+                document.documentElement.style.setProperty('--bg-color-secondary', '#f5f5f5');
+                document.body.classList.add('light-theme');
+                document.body.classList.remove('private-mode');
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0a0a0a');
+                document.documentElement.style.setProperty('--bg-color-secondary', '#1a1a1a');
+                document.body.classList.remove('light-theme');
+                if (isPrivateMode) {
+                    document.body.classList.add('private-mode');
+                } else {
+                    document.body.classList.remove('private-mode');
+                }
+            }
+        }
+
+        (function() {
+            const savedColor = localStorage.getItem('themeColor') || '#000000';
+            const themeType = localStorage.getItem('themeType') || 'light';
+            applyTheme(savedColor, themeType === 'light');
+        })();
+
+        // Recherche sur Enter
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            const resultsDiv = document.getElementById('results');
+
+            // Afficher un message de chargement
+            resultsDiv.innerHTML = '<div class="loading">Recherche en cours...</div>';
+
+            try {
+                // Appeler notre API de recherche
+                const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+
+                if (!response.ok) {
+                    throw new Error('Search failed');
+                }
+
+                const data = await response.json();
+
+                // Afficher les résultats
+                if (data.results && data.results.length > 0) {
+                    resultsDiv.innerHTML = data.results.map(result => `
+                        <div class="result-item">
+                            <a href="${result.url}" ${result.external ? 'target="_blank"' : ''}>${result.title}</a>
+                            <div class="result-url">${result.url}</div>
+                            <div class="result-desc">${result.description}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="loading">
+                            Aucun résultat trouvé pour "${query}".
+                            <br><br>
+                            <a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" style="color: ${currentThemeColor};">
+                                Rechercher sur Google
+                            </a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                resultsDiv.innerHTML = `
+                    <div class="loading">
+                        Erreur lors de la recherche.
+                        <br><br>
+                        <a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" style="color: ${currentThemeColor};">
+                            Rechercher sur Google
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        // Récupérer les paramètres d'URL au chargement
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            if (query) {
+                document.getElementById('searchInput').value = query;
+                performSearch();
+            }
+        });
+
+        // Écouter les changements de thème depuis le parent pour mise à jour instantanée
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'themeUpdate') {
+                const { themeColor, isLightTheme: lightTheme } = event.data;
+
+                // Appliquer le thème
+                applyTheme(themeColor, lightTheme);
+
+                // Sauvegarder dans localStorage pour la prochaine fois
+                localStorage.setItem('themeColor', themeColor);
+                localStorage.setItem('themeType', lightTheme ? 'light' : 'dark');
+            }
+        });
+    </script>
+</body>
+</html>
