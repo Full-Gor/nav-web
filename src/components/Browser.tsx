@@ -869,7 +869,8 @@ const getStyles = (themeColor: string, isLightTheme: boolean, bgColor: string, b
   },
   header: {
     backgroundColor: bgColorSecondary,
-    boxShadow: isLightTheme ? 'none' : `0 2px 4px ${themeColor}50`
+    boxShadow: isLightTheme ? 'none' : `0 2px 4px ${themeColor}50`,
+    overflow: 'visible'
   },
   toolbar: {
     display: 'flex',
@@ -896,7 +897,8 @@ const getStyles = (themeColor: string, isLightTheme: boolean, bgColor: string, b
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    overflow: 'visible'
   },
   addressBarContainer: {
     padding: 'clamp(4px, 2vw, 8px)',
@@ -911,7 +913,7 @@ const getStyles = (themeColor: string, isLightTheme: boolean, bgColor: string, b
     borderRadius: 'clamp(16px, 5vw, 24px)',
     border: `2px solid ${themeColor}`,
     padding: 'clamp(8px, 2vw, 12px)',
-    boxShadow: isLightTheme ? 'none' : `0 0 10px ${themeColor}80`,
+    boxShadow: 'none',
     width: '100%',
     boxSizing: 'border-box'
   },
@@ -998,7 +1000,7 @@ const getStyles = (themeColor: string, isLightTheme: boolean, bgColor: string, b
   },
   fullButton: {
     position: 'fixed',
-    bottom: 'clamp(10px, 3vw, 20px)',
+    bottom: 'clamp(40px, 10vw, 60px)',
     right: 'clamp(10px, 3vw, 20px)',
     width: 'clamp(44px, 12vw, 56px)',
     height: 'clamp(44px, 12vw, 56px)',
